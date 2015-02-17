@@ -133,7 +133,9 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
 
-        return rootview;
+
+
+                      return rootview;
     }
 
 

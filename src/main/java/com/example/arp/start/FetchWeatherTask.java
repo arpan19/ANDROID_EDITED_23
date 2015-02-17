@@ -26,8 +26,8 @@ import java.util.Vector;
  */
 
     public class  FetchWeatherTask extends AsyncTask<String,Void,Void > {
-    String[] s1=new String[50];
-    String[] s=new String[50];
+    String[] s1;
+    String[] s;
 
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -51,7 +51,7 @@ int i;
             Log.v(LOG_TAG, "Getting data");
 
             for (i = 0; i < length; i++) {
-
+                Log.i("Test", i+"");
                 JSONObject details = jarray.getJSONObject(i);
                 String serial_number = details.getString("serial_number");
                 String company_name = details.getString("company_name");
@@ -61,9 +61,9 @@ int i;
                 String salary = details.getString("salary");
                 String deadline = details.getString("deadline");
                 String other_info = details.getString("other_info");
-                s[i] = "\nCompany:" + company_name + "\nDate:" + dat + "\n";
-                Log.d("sample", s[i]);
-                s1[i] = "\n" + i + "\t" + serial_number + "\n\nCompany:" + company_name + "\n\nDate:" + dat + "\n\nEligibilty Criteria:" + eligibility_criteria + "\n\nBranch:" + branch + "\n\nDeadline:" + deadline + "\n\nOther Information:" + other_info + "\n";
+                //s[i] = "\nCompany:" + company_name + "\nDate:" + dat + "\n";
+                //Log.d("sample", s[i]);
+                //s1[i] = "\n" + i + "\t" + serial_number + "\n\nCompany:" + company_name + "\n\nDate:" + dat + "\n\nEligibilty Criteria:" + eligibility_criteria + "\n\nBranch:" + branch + "\n\nDeadline:" + deadline + "\n\nOther Information:" + other_info + "\n";
                 ContentValues weatherValues = new ContentValues();
 
                 weatherValues.put(PatEntry.COLUMN_SERIAL_NUMBER, serial_number);

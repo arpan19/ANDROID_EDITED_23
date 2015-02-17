@@ -15,7 +15,7 @@ public class PatDBHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 1;
 
-    private static final String DATABASE_NAME = "pat.db";
+    private static final String DATABASE_NAME = "pat";
 
     public PatDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -27,7 +27,7 @@ public class PatDBHelper extends SQLiteOpenHelper {
 
         // TBD
 
-        final String SQL_CREATE_WEATHER_TABLE = "CREATE TABLE " + PatEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_WEATHER_TABLE = "CREATE TABLE IF NOT EXISTS " + PatEntry.TABLE_NAME + " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
@@ -44,7 +44,8 @@ public class PatDBHelper extends SQLiteOpenHelper {
                 PatEntry.COLUMN_SALARY + " TEXT NOT NULL, " +
                 PatEntry.COLUMN_DEADLINE + " TEXT NOT NULL, " +
 
-                PatEntry.COLUMN_OTHER_INFO + " TEXT NOT NULL, ON CONFLICT REPLACE);";
+                PatEntry.COLUMN_OTHER_INFO + " TEXT NOT NULL );";
+        sqLiteDatabase.execSQL(SQL_CREATE_WEATHER_TABLE);
     }
 
     @Override
