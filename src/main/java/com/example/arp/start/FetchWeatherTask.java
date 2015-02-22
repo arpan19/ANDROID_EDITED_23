@@ -1,5 +1,6 @@
 package com.example.arp.start;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import com.example.arp.start.data.PatContract;
 import com.example.arp.start.data.PatContract.PatEntry;
 
 import org.json.JSONArray;
@@ -26,9 +28,6 @@ import java.util.Vector;
  */
 
     public class  FetchWeatherTask extends AsyncTask<String,Void,Void > {
-    String[] s1;
-    String[] s;
-
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
     private ArrayAdapter<String> mForecastAdapter;
@@ -38,10 +37,22 @@ import java.util.Vector;
 
     }
 
-
+    private ProgressDialog pd;
 int i;
+    Context context;
+    /*
+    @Override
+    protected void onPreExecute() {
+        pd = new ProgressDialog(context);
+        pd.setTitle("Processing...");
+        pd.setMessage("Please wait.");
+        pd.setCancelable(false);
+        pd.setIndeterminate(true);
+        pd.show();
+    }
+*/
 
-        private Void getWeatherDataFromJson(String forecastJsonStr, int numDays)
+    private Void getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
 
 
@@ -61,12 +72,12 @@ int i;
                 String salary = details.getString("salary");
                 String deadline = details.getString("deadline");
                 String other_info = details.getString("other_info");
-                //s[i] = "\nCompany:" + company_name + "\nDate:" + dat + "\n";
+                //s[i] = "\nCompany:" + company_nfame + "\nDate:" + dat + "\n";
                 //Log.d("sample", s[i]);
                 //s1[i] = "\n" + i + "\t" + serial_number + "\n\nCompany:" + company_name + "\n\nDate:" + dat + "\n\nEligibilty Criteria:" + eligibility_criteria + "\n\nBranch:" + branch + "\n\nDeadline:" + deadline + "\n\nOther Information:" + other_info + "\n";
                 ContentValues weatherValues = new ContentValues();
 
-                weatherValues.put(PatEntry.COLUMN_SERIAL_NUMBER, serial_number);
+                weatherValues.put(PatContract.PatEntry.COLUMN_SERIAL_NUMBER, serial_number);
 
                 weatherValues.put(PatEntry.COLUMN_COMPANY_NAME, company_name);
                 weatherValues.put(PatEntry.COLUMN_DAT, dat);
@@ -91,6 +102,8 @@ return null;
         @Override
         protected Void doInBackground(String... params) {
             if (params.length == 0) {
+                Log.d(LOG_TAG,"Return NOTICE URI:");
+
                 return null;
             }
             HttpURLConnection urlConnection = null;
@@ -161,9 +174,15 @@ return null;
 
         }
 
-
-
+/*
+    @Override
+    protected void onPostExecute(Void result) {
+        if (pd!=null) {
+            pd.dismiss();
+        }
     }
+*/
+}
 
 
 

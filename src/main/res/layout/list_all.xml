@@ -7,13 +7,15 @@
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:padding="16dp"
+    android:id="@+id/main_list"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
-              android:id="@+id/serial_number" />
+              android:id="@+id/serial_number"
+              />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
@@ -35,18 +37,22 @@
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:id="@+id/branch"
-              android:text=" - " />
+           />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
-              android:id="@+id/salary" />
+        android:id="@+id/salary"></TextView>
 
+    <blink xmlns:android="http://schemas.android.com/apk/res/android"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:id="@+id/deadline"
-              android:text="/" />
+              android:textColor="#F00"/>
+    </blink>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"

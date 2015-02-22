@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,8 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import com.example.arp.start.data.PatContract.PatEntry;
+import com.example.arp.start.data.PatContract;
 
 /**
  * Created by Arp on 2/8/2015.
@@ -29,22 +31,40 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
 {
     public static final String LOG_TAG = "MyApp";
     View rootview;
+
     private  String mLocation;
     private  static  final int FORECAST_LOADER=0;
 
     private  static final String[] FORECAST_COLUMNS ={
-            PatEntry.TABLE_NAME+"."+PatEntry._ID,
-            PatEntry.COLUMN_SERIAL_NUMBER,
-            PatEntry.COLUMN_COMPANY_NAME,
-            PatEntry.COLUMN_DAT,
-            PatEntry.COLUMN_ELIGIBILITY_CRITERIA,
-            PatEntry.COLUMN_BRANCH,
-            PatEntry.COLUMN_SALARY,
-            PatEntry.COLUMN_DEADLINE,
-            PatEntry.COLUMN_OTHER_INFO
+            PatContract.PatEntry.TABLE_NAME+"."+ PatContract.PatEntry._ID,
+            PatContract.PatEntry.COLUMN_SERIAL_NUMBER,
+            PatContract.PatEntry.COLUMN_COMPANY_NAME,
+            PatContract.PatEntry.COLUMN_DAT,
+            PatContract.PatEntry.COLUMN_ELIGIBILITY_CRITERIA,
+            PatContract.PatEntry.COLUMN_BRANCH,
+            PatContract.PatEntry.COLUMN_SALARY,
+            PatContract.PatEntry.COLUMN_DEADLINE,
+            PatContract.PatEntry.COLUMN_OTHER_INFO
+    };
+    private  static final String[] FORECAST_COLUMNS1 ={
+            PatContract.PatEntry.TABLE_NAME+"."+ PatContract.PatEntry._ID,
+
+            PatContract.PatEntry.COLUMN_COMPANY_NAME,
+            PatContract.PatEntry.COLUMN_DAT,
+
+            PatContract.PatEntry.COLUMN_DEADLINE,
+
     };
 
 
+    public static final int COL_SERIAL_NUMBER = 0;
+    public static final int COL_COMPANY_NAME = 1;
+    public static final int COL_DAT = 2;
+    public static final int COL_ELIGIBILITY_CRITERIA = 3;
+    public static final int COL_BRANCH = 4;
+    public static final int COL_SALARY = 5;
+    public static final int COL_DEADLINE = 6;
+    public static final int COLUMN_OTHER_INFO=7;
     public menu2_Fragment() {
 
     }
@@ -54,9 +74,11 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
 
     }
-    private SimpleCursorAdapter checkingAdapter;
-    String[] s = new String[20];
 
+
+    String[] s = new String[20];
+    private SimpleCursorAdapter checkingAdapter;
+    private SimpleCursorAdapter checkingAdapter1;
 
 
 
@@ -79,7 +101,8 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
 
-            updateWeather();
+            FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+            weatherTask.execute("94043");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -87,27 +110,34 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        checkingAdapter1 = new SimpleCursorAdapter(
+
+
+                getActivity(),
+                R.layout.mylist,
+                null,
+                FORECAST_COLUMNS1,
+                new int[]{
+                        R.id.company_name,
+                        R.id.date,
+                        R.id.deadline,
+                },
+                0
+
+        );
+        Log.d(LOG_TAG,"formed ca1");
 
 
       /*  String[] checkinglist = { "name-arpan","name-shreya","name-piyush"};
         List<String> checklist = new ArrayList<String>(Arrays.asList(checkinglist));*/
+
         checkingAdapter = new SimpleCursorAdapter(
 
 
                 getActivity(),
                 R.layout.list_all,
                 null,
-                new String[]{
-                        PatEntry.COLUMN_SERIAL_NUMBER,
-                        PatEntry.COLUMN_COMPANY_NAME,
-                        PatEntry.COLUMN_DAT,
-                        PatEntry.COLUMN_ELIGIBILITY_CRITERIA,
-                        PatEntry.COLUMN_BRANCH,
-                        PatEntry.COLUMN_SALARY,
-                        PatEntry.COLUMN_DEADLINE,
-                        PatEntry.COLUMN_OTHER_INFO
-
-                },
+                FORECAST_COLUMNS,
                 new int[]{R.id.serial_number,
                         R.id.company_name,
                         R.id.date,
@@ -122,31 +152,59 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
         );
         rootview = inflater.inflate(R.layout.menu2_layout, container, false);
         ListView listView = (ListView) rootview.findViewById(R.id.all_companies);
-        listView.setAdapter(checkingAdapter);
+        listView.setAdapter(checkingAdapter1);
+        Log.d(LOG_TAG,"reached ca1");
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+
             @Override
+
+
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, "placeholder");
-                startActivity(intent);
+                Cursor cursor = checkingAdapter1.getCursor();
+                Log.d(LOG_TAG,"reached ca2");
+
+                if (cursor != null && cursor.moveToPosition(position)) {
+
+                    String name = cursor.getString(COL_COMPANY_NAME);
+                    String date = cursor.getString(COL_DAT);
+                    String ec = cursor.getString(COL_ELIGIBILITY_CRITERIA);
+                    String branch = cursor.getString(COL_BRANCH);
+                    String salary = cursor.getString(COL_SALARY);
+                    String deadline = cursor.getString(COL_DEADLINE);
+                    String other_info = cursor.getString(COLUMN_OTHER_INFO);
+                    Log.d(LOG_TAG,"reached ca3");
+
+                    TextView tv=(TextView)rootview.findViewById(R.id.company_name);
+                    tv.setText(name);
+                    TextView tv1=(TextView)rootview.findViewById(R.id.date);
+                    tv1.setText(date);
+                    Log.d(LOG_TAG,"reached ca4");
+
+                    Log.d(LOG_TAG,"textview  :"+tv.getText().toString()+" "+tv1.getText().toString());
+                    String detailString = String.format("%s - %s - %s - %s - %s - %s - %s",
+                            name, date, ec, branch,salary,deadline,other_info);
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .putExtra(Intent.EXTRA_TEXT, detailString);
+                    startActivity(intent);
+                    Log.d(LOG_TAG,"reached ca5");
+
+                }
             }
         });
 
-
-
-                      return rootview;
+        return rootview;
     }
-
 
 
 
     private void updateWeather() {
         FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = prefs.getString("", "");
+new FetchWeatherTask(getActivity()).execute(location);
 
-        weatherTask.execute(location);
 
     }
 
@@ -169,14 +227,14 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
 
 
 
-        Uri tableUri= PatEntry.CONTENT_URI;
+        Uri tableUri= PatContract.PatEntry.CONTENT_URI;
 
                        /*     String sortOrder = WeatherEntry.COLUMN_DATETEXT + " ASC";
 
                     mLocation = Utility.getPreferredLocation(getActivity());
            Uri weatherForLocationUri = WeatherEntry.buildWeatherLocationWithStartDate(
                             mLocation, startDate); */
-
+        Log.d(LOG_TAG,"formed uri menu2 ca1"+tableUri);
         return new CursorLoader
                 (
                         getActivity(),
@@ -190,7 +248,7 @@ public class menu2_Fragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        checkingAdapter.swapCursor(data);
+        checkingAdapter1.swapCursor(data);
 
     }
 

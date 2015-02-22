@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent" android:layout_height="match_parent">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Notifications"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal" />
+        android:textAlignment="gravity"
+        android:textSize="@dimen/abc_text_size_title_material"
+        android:text="NOTICE FROM PAT"/>
 
     <ListView
-        android:id="@+id/notification"
+        android:id="@+id/all_companies3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="@style/Base.TextAppearance.AppCompat.Display3"
-        android:background="@color/ripple_material_dark"
-        android:backgroundTint="#fd1f0f20"
-        android:textAlignment="@integer/abc_max_action_buttons"
-        android:theme="@style/Base.TextAppearance.AppCompat.Light.Widget.PopupMenu.Small"/>
-
-
-</RelativeLayout>
+        android:layout_height="match_parent"/>
+</FrameLayout>
